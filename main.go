@@ -9,89 +9,99 @@ import (
 )
 
 // Quick sort algorithm----------------------------------------------------------------
-var quickSortMovement int
-var quickSortComparison int
 
+var quickSortMovement int   // Variable to count the number of movements (swaps) in QuickSort
+var quickSortComparison int // Variable to count the number of comparisons in QuickSort
+
+// quickSort is the main function that implements the QuickSort algorithm
 func quickSort(arr []int, start, end int) {
 	if end <= start {
-		return //base case
+		return // Base case: If the end index is less than or equal to the start index, return
 	}
-	pivot := partition(arr, start, end)
-	quickSort(arr, start, pivot-1)
-	quickSort(arr, pivot+1, end)
-
+	pivot := partition(arr, start, end) // Partition the array and get the pivot index
+	quickSort(arr, start, pivot-1)      // Recursively sort the elements before the pivot
+	quickSort(arr, pivot+1, end)        // Recursively sort the elements after the pivot
 }
 
+// partition rearranges the elements in the array so that all elements less than the pivot are to the left
+// of the pivot and all elements greater than the pivot are to the right of the pivot
 func partition(arr []int, start, end int) int {
-	pivot := arr[end]
-	i := start - 1
+	pivot := arr[end] // Choose the last element as the pivot
+	i := start - 1    // Index of the smaller element
 
 	for j := start; j <= end-1; j++ {
 		if arr[j] < pivot {
-			i++
-			//swaping the numbers
+			i++ // Increment index of the smaller element
+			// Swap arr[i] and arr[j]
 			arr[i], arr[j] = arr[j], arr[i]
-			quickSortMovement++
+			quickSortMovement++ // Increment movement counter
 		}
-		quickSortComparison++
+		quickSortComparison++ // Increment comparison counter
 	}
 	i++
+	// Swap the pivot element with the element at index i
 	arr[i], arr[end] = arr[end], arr[i]
-	quickSortMovement++
-	return i //+1
+	quickSortMovement++ // Increment movement counter
+	return i            // Return the index of the pivot
 }
 
 // Merge sort algorithm--------------------------------------------------------------
-var mergeSortMovement int
-var mergeSortComparison int
 
+var mergeSortMovement int   // Variable to count the number of movements (copies) in MergeSort
+var mergeSortComparison int // Variable to count the number of comparisons in MergeSort
+
+// mergeSort is the main function that implements the MergeSort algorithm
 func mergeSort(arr []int) {
 	if len(arr) <= 1 {
-		return // Base case: already sorted or empty
+		return // Base case: the array is already sorted or empty
 	}
 
-	mid := len(arr) / 2
-	left := make([]int, mid)
-	right := make([]int, len(arr)-mid)
+	mid := len(arr) / 2                // Find the middle point to divide the array into two halves
+	left := make([]int, mid)           // Create a temporary array for the left half
+	right := make([]int, len(arr)-mid) // Create a temporary array for the right half
 
-	copy(left, arr[:mid])
-	copy(right, arr[mid:])
+	copy(left, arr[:mid])  // Copy the left half of arr to left
+	copy(right, arr[mid:]) // Copy the right half of arr to right
 
-	mergeSort(left)  // Recursively sort left half
-	mergeSort(right) // Recursively sort right half
+	mergeSort(left)  // Recursively sort the left half
+	mergeSort(right) // Recursively sort the right half
 
-	merge(arr, left, right) // Merge the sorted halves
+	merge(arr, left, right) // Merge the sorted halves back into arr
 }
 
+// merge combines two sorted arrays (left and right) into a single sorted array (arr)
 func merge(arr, left, right []int) {
-	i, j, k := 0, 0, 0
+	i, j, k := 0, 0, 0 // Initialize indices for left, right, and merged arrays
 
+	// Merge the two arrays while there are elements in both left and right
 	for i < len(left) && j < len(right) {
 		if left[i] <= right[j] {
 			arr[k] = left[i]
-			i++
-			mergeSortMovement++
+			i++                 // Move to the next element in left
+			mergeSortMovement++ // Increment movement counter
 		} else {
 			arr[k] = right[j]
-			j++
-			mergeSortMovement++
+			j++                 // Move to the next element in right
+			mergeSortMovement++ // Increment movement counter
 		}
-		k++
-		mergeSortComparison++
+		k++                   // Move to the next position in merged array
+		mergeSortComparison++ // Increment comparison counter
 	}
 
+	// Copy any remaining elements from left
 	for i < len(left) {
 		arr[k] = left[i]
-		i++
-		k++
-		mergeSortMovement++
+		i++                 // Move to the next element in left
+		k++                 // Move to the next position in merged array
+		mergeSortMovement++ // Increment movement counter
 	}
 
+	// Copy any remaining elements from right
 	for j < len(right) {
 		arr[k] = right[j]
-		j++
-		k++
-		mergeSortMovement++
+		j++                 // Move to the next element in right
+		k++                 // Move to the next position in merged array
+		mergeSortMovement++ // Increment movement counter
 	}
 }
 
